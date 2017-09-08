@@ -8,31 +8,8 @@
     <link href="assets/img/icon.png" rel="apple-touch-icon" />
 
     <title>Local Server</title>
-    <link rel='stylesheet' href='app/assets/css/semantic-ui-2.2.12-min.css'>
-    
-        <!-- Hammer reload -->
-          <script>
-            setInterval(function(){
-              try {
-                if(typeof ws != 'undefined' && ws.readyState == 1){return true;}
-                ws = new WebSocket('ws://'+(location.host || 'localhost').split(':')[0]+':35353')
-                ws.onopen = function(){ws.onclose = function(){document.location.reload()}}
-                window.onbeforeunload = function() { ws = null }
-                ws.onmessage = function(){
-                  var links = document.getElementsByTagName('link');
-                    for (var i = 0; i < links.length;i++) {
-                    var link = links[i];
-                    if (link.rel === 'stylesheet' && !link.href.match(/typekit/)) {
-                      href = link.href.replace(/((&|\?)hammer=)[^&]+/,'');
-                      link.href = href + (href.indexOf('?')>=0?'&':'?') + 'hammer='+(new Date().valueOf());
-                    }
-                  }
-                }
-              }catch(e){}
-            }, 1000)
-          </script>
-        <!-- /Hammer reload -->
-      
+    <!-- @stylesheet app/assets/css/semantic-ui-2.2.12-min.css -->
+    <!-- @reload -->
   </head>
   <body ng-controller="localserver">
     <div class="container" style="margin:20px;">
@@ -126,8 +103,7 @@
         </tbody>
       </table>
 
-        d
-
+      
 
 
       <div ng-show="projects.length==0" style="position:relative; margin-top:80px; text-align:center;">
@@ -136,9 +112,9 @@
         </h2>
       </div>
     </div><!-- /.container -->
-    <script src='app/assets/js/jQuery-3.2.1-min.js'></script>
-    <script src='app/assets/js/angular-1.6.5-min.js'></script>
-    <script src='app/assets/js/semantic-ui-2.2.12-min.js'></script>
-    <script src='app/app.js'></script>
+    <!-- @javascript app/assets/js/jQuery-3.2.1-min.js -->
+    <!-- @javascript app/assets/js/angular-1.6.5-min.js -->
+    <!-- @javascript app/assets/js/semantic-ui-2.2.12-min.js -->
+    <!-- @javascript app/app.js -->
   </body>
 </html>
