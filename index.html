@@ -7,7 +7,7 @@
     <meta name="apple-mobile-web-app-status-bar-style" content="black">
     <link href="assets/img/icon.png" rel="apple-touch-icon" />
 
-    <title>Local Server</title>
+    <title ng-bind="config.company_name">Local Server</title>
     <!-- @stylesheet app/assets/css/semantic-ui-2.2.12-min.css -->
     <!-- @reload -->
   </head>
@@ -103,7 +103,7 @@
         </tbody>
       </table>
 
-      
+
 
 
       <div ng-show="projects.length==0" style="position:relative; margin-top:80px; text-align:center;">
