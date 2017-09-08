@@ -18,6 +18,16 @@
         $properties['title'] = $list->item(0)->textContent;
     }
 
+    $list = $doc->getElementsByTagName("meta");
+    $description = "";
+    foreach ($list as $item) {
+      $rel = $item->getAttribute('name');
+      if ($rel == 'description') {
+        $description = $item->getAttribute('content');
+        break;
+      }
+    }
+
     $list = $doc->getElementsByTagName("link");
     $href = "";
     foreach ($list as $item) {
@@ -30,6 +40,9 @@
     if($href!==''){
       $properties['icon'] = $href;
     }
+    if($description!==''){
+      $properties['description'] = $description;
+    }
     return $properties;
   }
 
@@ -41,9 +54,21 @@
     $dirsplit = explode('/', $folder);
     $dirname = $dirsplit[count($dirsplit)-1];
     $project->folder = $dirname;
-
     if (file_exists($folder.'/build/index.html')) {
       $properties = project_properties($folder.'/build/index.html');
+
+      if(isSet($properties['title'])){
+        $project->name = $properties['title'];
+
+      }else{
+        $project->hidden = true;
+      }
+      if(isSet($properties['icon'])){
+        $project->icon = $properties['icon'];
+      }
+    }else if (file_exists($folder.'/build/index.php')) {
+
+      $properties = project_properties($folder.'/build/index.php');
       if(isSet($properties['title'])){
         $project->name = $properties['title'];
       }else{
@@ -52,9 +77,8 @@
       if(isSet($properties['icon'])){
         $project->icon = $properties['icon'];
       }
-    }else if (file_exists($folder.'/build/index.php')) {
-        $project->name = page_title($folder.'/build/index.php');
     }else{
+
       $project->hidden = true;
     }
 

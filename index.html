@@ -50,8 +50,8 @@
           </a>
         </div>
       </div>
-      <div class="ui cards" style="position:relative;" ng-show="layout=='grid'">
-        <a class="card" ng-click="launch(project.folder);" ng-repeat="project in projects = (config.projects | filter: q)" ng-hide="project.hidden">
+      <div class="ui cards fluid centered three" style="position:relative;" ng-show="layout=='grid'">
+        <div class="card" ng-repeat="project in projects = (config.projects | filter: q)" ng-hide="project.hidden">
           <div class="content">
             <img class="right floated mini ui image rounded" ng-src="{{resourse(project.folder,project.icon)}}"/>
             <div class="header">
@@ -63,14 +63,19 @@
           </div>
           <div class="content">
             <div class="description">
-              <p>{{project.folder}}.dev/{{project.icon}}</p>
+              <p>{{project.description}}</p>
             </div>
           </div>
           <div class="content extra">
-            <i class="folder outline icon"></i>
-            {{project.folder}}/
+            <span class="right floated">
+              <a class="ui button mini basic" ng-click="open(project.path);">Atom</a>
+            </span>
+            <a ng-click="launch(project.folder);">
+              <i class="folder outline icon"></i>
+              {{project.folder}}/
+            </a>
           </div>
-        </a>
+        </div>
       </div>
       <table class="ui very basic celled table" ng-show="layout=='list'">
         <thead>
@@ -97,7 +102,9 @@
               <i class="folder outline icon"></i>
               {{project.folder}}/
             </td>
-            <td></td>
+            <td>
+              <a class="ui button" ng-click="open(project.path);">Open</a>
+            </td>
           </tr>
         </tbody>
       </table>

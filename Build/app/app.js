@@ -11,6 +11,10 @@ app.controller("localserver", ["$scope","$http", function($scope,$http) {
     $scope.layout = layout;
   }
 
+  $scope.open = function(project){
+    window.location = "atm://open?url=file://"+project+"/";
+  }
+
 
   $scope.resourse = function(folder,resource){
     if($scope.config.hostname=='home.dev'){
