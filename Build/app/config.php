@@ -1,8 +1,11 @@
 <?php
   $config = array(
     'company_name'=>  'Company Name',
+    'domain'=>        'local-serve.dev',
     'local_ip'=>      getHostByName(getHostName()),
-    'server_path'=>   $_SERVER['SERVER_NAME']
+    'server_path'=>   $_SERVER['SERVER_NAME'],
+    'atom'=>          true
+
   );
   $projects = array();
   $folders = array_filter(glob('/www/sites/*'), 'is_dir');

@@ -24,10 +24,19 @@ app.controller("localserver", ["$scope","$http", function($scope,$http) {
     }
   }
   $scope.launch = function(folder){
-    if($scope.config.hostname=='home.dev'){
+    if($scope.config.hostname==$scope.config.domain){
       window.location = 'http://'+folder+'.dev';
     }else{
       window.location = 'http://'+folder+'.'+$scope.config.local_ip+'.xip.io';
+    }
+  }
+
+  $scope.xip = function(){
+    if($scope.config.hostname!==$scope.config.domain){
+      window.location = 'http://'+$scope.config.domain;
+    }else{
+      var split = $scope.config.domain.split('.');
+      window.location = 'http://'+split[0]+'.'+$scope.config.local_ip+'.xip.io';
     }
   }
 
@@ -35,7 +44,7 @@ app.controller("localserver", ["$scope","$http", function($scope,$http) {
     function successCallback(response) {
       $scope.config = response.data;
       $scope.config.hostname = document.location.hostname;
-      if($scope.config.hostname=='home.dev'){
+      if($scope.config.hostname==$scope.config.domain){
         $scope.config.xip = false;
       }else{
         $scope.config.xip = true;

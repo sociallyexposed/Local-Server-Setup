@@ -2,17 +2,22 @@
 <html ng-app="LocalServer" ng-controller="localserver">
   <head>
     <meta charset="utf-8">
+
+    <title ng-bind="config.company_name">Local Server</title>
+    <meta name="description" content="Local server projects management.">
+    <link href="app/assets/img/icon.png" rel="apple-touch-icon" />
+
     <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, minimum-scale=1, user-scalable=no, minimal-ui">
     <meta name="apple-mobile-web-app-capable" content="yes">
     <meta name="apple-mobile-web-app-status-bar-style" content="black">
-    <link href="assets/img/icon.png" rel="apple-touch-icon" />
-    <title ng-bind="config.company_name">Local Server</title>
+
+
     <!-- @stylesheet app/assets/css/semantic-ui-2.2.12-min.css -->
     <!-- @reload -->
   </head>
   <body>
-    <div class="container" style="margin:20px;">
-      <div class="ui secondary stackable menu" style="border-bottom:1px solid #ccc;">
+    <div style="margin-left:20px; margin-right:20px; padding-top:80px;">
+      <div class="ui secondary stackable menu top fixed" style="border-bottom:1px solid #eee; background:rgba(255,255,255,0.93)">
         <div class="header item">
             {{config.company_name}}
         </div>
@@ -22,11 +27,39 @@
         <a class="item">
           Closed
         </a>
+
+
+        <div class="ui dropdown item pointing">
+           <i class="dropdown icon"></i>
+           Tools
+           <div class="menu">
+             <div class="header">
+              Database
+            </div>
+             <div class="item">
+               <i class="database icon"></i>
+               Mysql database
+             </div>
+             <div class="item">
+               <i class="server icon"></i>
+               Firebase
+             </div>
+             <div class="divider"></div>
+             <div class="header">
+              Information
+            </div>
+             <div class="item">
+               <i class="database icon"></i>
+               PHP Ini
+             </div>
+           </div>
+         </div>
+
         <div class="right menu">
           <a class="item">
             <i class="icon add" style="margin:0px;padding:0px;"></i>
           </a>
-          <div class="item">
+          <div class="item" style="padding-right:0px;">
             <div class="ui basic mini buttons">
               <button class="ui button" ng-click="set_layout('grid');" ng-class="{'active':layout=='grid'}">
                 <i class="icon grid layout" style="margin:0px;padding:0px;"></i>
@@ -38,27 +71,29 @@
           </div>
           <div class="item">
             <form class="ui icon input">
-              <input type="text" placeholder="Search..." ng-model="q">
+              <input type="text" placeholder="Search..." ng-model="q"/>
               <i class="search link icon"></i>
             </form>
           </div>
-          <a class="ui item" href="http://home.{{config.local_ip}}.xip.io" ng-hide="config.xip">
-            <i class="icon safari" style="margin:0px;padding:0px;"></i>
-          </a>
-          <a class="ui item active" href="http://home.dev" ng-show="config.xip">
-            <i class="icon safari blue" style="margin:0px;padding:0px;"></i>
+          <a class="ui item" ng-click="xip()" ng-class="{'active':config.xip}">
+            <i class="icon safari" style="margin:0px;padding:0px;" ng-class="{'blue':config.xip}"></i>
           </a>
         </div>
       </div>
       <div class="ui cards fluid centered three" style="position:relative;" ng-show="layout=='grid'">
-        <div class="card" ng-repeat="project in projects = (config.projects | filter: q)" ng-hide="project.hidden">
+        <div class="card" ng-repeat="project in projects = (config.projects | filter: q)">
           <div class="content">
-            <img class="right floated mini ui image rounded" ng-src="{{resourse(project.folder,project.icon)}}"/>
+            <img class="right floated mini ui image rounded" ng-src="{{resourse(project.folder,project.icon)}}" ng-show="project.icon"/>
+            <img class="right floated mini ui image rounded" ng-src="app/assets/img/icon-missing.png" ng-show="!project.icon"/>
             <div class="header">
-              {{project.name}}
+              <span ng-show="project.name">{{project.name}}</span>
+              <span ng-show="!project.name" style="color:#ccc;">Untitled</span>
             </div>
             <div class="meta">
-              {{project.path}}
+              <a ng-click="launch(project.folder);">
+                <i class="folder outline icon"></i>
+                {{project.folder}}/
+              </a>
             </div>
           </div>
           <div class="content">
@@ -68,12 +103,10 @@
           </div>
           <div class="content extra">
             <span class="right floated">
-              <a class="ui button mini basic" ng-click="open(project.path);">Atom</a>
+              <a class="ui button mini basic" ng-click="open(project.path);" ng-show="config.atom">Open in Atom</a>
+              <a class="ui button mini basic primary" ng-click="launch(project.folder);">View build</a>
             </span>
-            <a ng-click="launch(project.folder);">
-              <i class="folder outline icon"></i>
-              {{project.folder}}/
-            </a>
+
           </div>
         </div>
       </div>
@@ -86,10 +119,11 @@
           </tr>
         </thead>
         <tbody>
-          <tr ng-repeat="project in projects = (config.projects | filter: q)" ng-hide="project.hidden">
+          <tr ng-repeat="project in projects = (config.projects | filter: q)">
             <td>
               <h4 class="ui image header">
-                <img class="mini ui image rounded" ng-src="{{resourse(project.folder,project.icon)}}"/>
+                <img class="mini ui image rounded" ng-src="{{resourse(project.folder,project.icon)}}" ng-show="project.icon"/>
+                <img class="mini ui image rounded" ng-src="app/assets/img/icon-missing.png" ng-show="!project.icon"/>
                 <div class="content">
                   {{project.name}}
                   <div class="sub header">
@@ -111,7 +145,11 @@
 
 
 
-
+      <div ng-show="config.projects.length==0" style="position:relative; margin-top:80px; text-align:center;">
+        <h2 class="ui icon header" style="color:#eee;">
+          <i class="folder open icon" style="font-size:22px;"></i> Your projects folder is empty.
+        </h2>
+      </div>
       <div ng-show="projects.length==0" style="position:relative; margin-top:80px; text-align:center;">
         <h2 class="ui icon header" style="color:#eee;">
           <i class="search icon" style="font-size:22px;"></i> No results found.
@@ -122,5 +160,8 @@
     <!-- @javascript app/assets/js/angular-1.6.5-min.js -->
     <!-- @javascript app/assets/js/semantic-ui-2.2.12-min.js -->
     <!-- @javascript app/app.js -->
+    <script type="text/javascript">
+    $('.dropdown').dropdown({});
+    </script>
   </body>
 </html>
