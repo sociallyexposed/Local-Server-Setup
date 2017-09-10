@@ -11,6 +11,35 @@
   $folders = array_filter(glob('/www/sites/*'), 'is_dir');
 
 
+  class localServer{
+
+    public function gitBranch(){
+      if($this->isGitAvailable()){
+        $gitHead = file('.git/HEAD', FILE_USE_INCLUDE_PATH);
+        $line1 = $gitHead[0]; //get the string from the array
+        $branch = explode("/", $line1, 3); //seperate out by the "/" in the string
+        $branchName = $branch[2]; //get the one that is always the branch name
+        return $branchName;
+      }else{
+        return FALSE;
+      }
+    }
+    public function isGitAvailable(){
+      /* Checks to see if the local project has a valid .git path */
+      if (!file_exists('../.git/HEAD')) {
+        return TRUE;
+      }else{
+        return FALSE;
+      }
+    }
+
+  }
+
+  $server = new localServer();
+
+  
+
+
   function project_properties($file){
     $properties = array();
     $doc = new DOMDocument();
